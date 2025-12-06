@@ -85,6 +85,10 @@ class CharGrid(input: List<String>) {
         }
     }
 
+    fun copy(): CharGrid {
+        return CharGrid(lines.toMutableList())
+    }
+
     override fun toString(): String {
         return lines.joinToString(separator = "\n")
     }
