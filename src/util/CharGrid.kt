@@ -26,7 +26,7 @@ class CharGrid(input: List<String>) {
         }
     }
 
-    operator fun get(c: Coordinate, invalid: Char?) = get(c.x, c.y, invalid)
+    operator fun get(c: Coordinate, invalid: Char? = null) = get(c.x, c.y, invalid)
 
     operator fun set(c: Coordinate, newChar: Char): CharGrid {
         lines[c.y] = "${lines[c.y].substring(0..<c.x)}$newChar${lines[c.y].substring(c.x + 1)}"

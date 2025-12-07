@@ -16,10 +16,10 @@ fun main() {
         for (y in rows) {
             for (x in grid.horizontalIndices) {
                 val c = Coordinate(x, y)
-                if (grid[c, ' '] == '|') {
-                    if (grid[c + DOWN, ' '] == '.') {
+                if (grid[c] == '|') {
+                    if (grid[c + DOWN] == '.') {
                         grid[c + DOWN] = '|'
-                    } else if (grid[c + DOWN, ' '] == '^') {
+                    } else if (grid[c + DOWN] == '^') {
                         grid[c + LEFT + DOWN] = '|'
                         grid[c + RIGHT + DOWN] = '|'
                     }
@@ -28,7 +28,7 @@ fun main() {
         }
 
         return grid.filter { position, c ->
-            c == '^' && grid[position + UP, ' '] == '|'
+            c == '^' && grid[position + UP] == '|'
         }.toList().size.toLong()
     }
 
