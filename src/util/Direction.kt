@@ -44,7 +44,10 @@ sealed class Direction(x: Int, y: Int) : Coordinate(x, y) {
         }
     }
 
-    fun revert(): Direction {
+    /**
+     * Returns LEFT for RIGHT and vice versa and UP for DOWN and vice versa.
+     */
+    operator fun not(): Direction {
         return when (this) {
             UP -> DOWN
             RIGHT -> LEFT

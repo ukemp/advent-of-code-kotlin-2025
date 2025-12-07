@@ -35,7 +35,7 @@ class CharGrid(input: List<String>) {
 
     operator fun contains(c: Coordinate): Boolean = c.x in horizontalIndices && c.y in verticalIndices
 
-    fun coordinates() = sequence<Coordinate> {
+    fun coordinates() = sequence {
         for (y in verticalIndices) {
             for (x in horizontalIndices) {
                 yield(Coordinate(x, y))
@@ -43,7 +43,7 @@ class CharGrid(input: List<String>) {
         }
     }
 
-    fun filter(predicate: (Coordinate, Char) -> Boolean) = sequence<Coordinate> {
+    fun filter(predicate: (Coordinate, Char) -> Boolean) = sequence {
         for (y in verticalIndices) {
             for (x in horizontalIndices) {
                 val c = Coordinate(x, y)
