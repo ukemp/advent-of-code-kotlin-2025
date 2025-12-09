@@ -7,5 +7,5 @@ package util
  */
 interface Measurable<T> {
 
-    fun distanceTo(other: T): Float
+    fun distanceTo(other: T): Double
 }

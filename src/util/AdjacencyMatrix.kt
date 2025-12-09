@@ -2,15 +2,15 @@ package util
 
 class AdjacencyMatrix<T : Measurable<T>>(private val measurables: List<T>) {
 
-    private val distances: Array<FloatArray>
+    private val distances: Array<DoubleArray>
 
     init {
         val size = measurables.size
-        distances = Array(size) { FloatArray(size) }
+        distances = Array(size) { DoubleArray(size) }
         for (i in 0 until size) {
             for (j in 0 until size) {
                 if (i == j) {
-                    distances[i][j] = 0f
+                    distances[i][j] = 0.0
                 } else {
                     distances[i][j] = measurables[i].distanceTo(measurables[j])
                 }
@@ -21,7 +21,7 @@ class AdjacencyMatrix<T : Measurable<T>>(private val measurables: List<T>) {
     val size: Int
         get() = measurables.size
 
-    operator fun get(i: Int, j: Int): Float {
+    operator fun get(i: Int, j: Int): Double {
         return distances[i][j]
     }
 
@@ -29,7 +29,7 @@ class AdjacencyMatrix<T : Measurable<T>>(private val measurables: List<T>) {
         return measurables[index]
     }
 
-    fun distanceBetween(from: T, to: T): Float? {
+    fun distanceBetween(from: T, to: T): Double? {
         val fromIndex = measurables.indexOf(from)
         val toIndex = measurables.indexOf(to)
         if (fromIndex == -1 || toIndex == -1) {
@@ -44,7 +44,7 @@ class AdjacencyMatrix<T : Measurable<T>>(private val measurables: List<T>) {
  *
  * @see sortedJunctions
  */
-data class Junction<T : Measurable<T>>(val c1: T, val c2: T, val distance: Float) : Comparable<Junction<T>> {
+data class Junction<T : Measurable<T>>(val c1: T, val c2: T, val distance: Double) : Comparable<Junction<T>> {
 
     override fun compareTo(other: Junction<T>): Int {
         return this.distance.compareTo(other.distance)

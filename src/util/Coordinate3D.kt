@@ -16,11 +16,11 @@ class Coordinate3D(val x: Int, val y: Int, val z: Int) : Measurable<Coordinate3D
 
     operator fun component3(): Int = z
 
-    override fun distanceTo(other: Coordinate3D): Float {
+    override fun distanceTo(other: Coordinate3D): Double {
         val sq = (other.x - this.x).let { it.toLong() * it } +
                 (other.y - this.y).let { it.toLong() * it } +
                 (other.z - this.z).let { it.toLong() * it }
-        return sqrt(sq.toFloat())
+        return sqrt(sq.toDouble())
     }
 
     override fun equals(other: Any?): Boolean {

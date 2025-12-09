@@ -66,10 +66,10 @@ open class Coordinate(val x: Int, val y: Int) : Measurable<Coordinate> {
         return (x - other.x).absoluteValue.toLong() + (y - other.y).absoluteValue
     }
 
-    override fun distanceTo(other: Coordinate): Float {
+    override fun distanceTo(other: Coordinate): Double {
         val sq = (other.x - this.x).let { it.toLong() * it } +
                 (other.y - this.y).let { it.toLong() * it }
-        return sqrt(sq.toFloat())
+        return sqrt(sq.toDouble())
     }
 
     override fun equals(other: Any?): Boolean {

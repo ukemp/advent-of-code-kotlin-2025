@@ -1,38 +1,25 @@
 package day09
 
+import util.AdjacencyMatrix
+import util.Measurable
 import util.readLines
+import util.sortedJunctions
 import kotlin.math.absoluteValue
 import kotlin.time.measureTime
 
-data class Tile(val x: Int, val y: Int) {
+data class Tile(val x: Int, val y: Int) : Measurable<Tile> {
 
-    fun areaOf(other: Tile): Long {
-        return (((x - other.x).absoluteValue + 1).toLong() * ((y - other.y).absoluteValue + 1))
+    override fun distanceTo(other: Tile): Double {
+        return (((x - other.x).absoluteValue + 1).toLong() * ((y - other.y).absoluteValue + 1)).toDouble()
     }
 }
 
 fun main() {
     fun part1(input: List<String>): Long {
         val tiles = input.map { it.split(",").let { (x, y) -> Tile(x.toInt(), y.toInt()) } }
-        val size = tiles.size
-        val areas: Array<LongArray> = Array(size) { LongArray(size) }
-        for (i in 0 until size) {
-            for (j in 0 until size) {
-                if (i == j) {
-                    areas[i][j] = 0L
-                } else {
-                    areas[i][j] = tiles[i].areaOf(tiles[j])
-                }
-            }
-        }
+        val m = AdjacencyMatrix(tiles)
 
-        return buildList {
-            for (i in 0 until size) {
-                for (j in i + 1 until size) {
-                    add(areas[i][j])
-                }
-            }
-        }.maxOf { it }
+        return m.sortedJunctions().last().distance.toLong()
     }
 
     fun part2(input: List<String>): Long {
