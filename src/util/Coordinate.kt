@@ -4,6 +4,7 @@ package util
 
 import kotlin.math.absoluteValue
 import kotlin.math.sign
+import kotlin.math.sqrt
 
 @Suppress("NOTHING_TO_INLINE")
 inline fun Coordinate(str: String, delimiter: Char = ','): Coordinate {
@@ -11,7 +12,7 @@ inline fun Coordinate(str: String, delimiter: Char = ','): Coordinate {
 }
 
 @Suppress("MemberVisibilityCanBePrivate")
-open class Coordinate(val x: Int, val y: Int) {
+open class Coordinate(val x: Int, val y: Int) : Measurable<Coordinate> {
 
     operator fun plus(other: Coordinate) = Coordinate(x + other.x, y + other.y)
 
@@ -63,6 +64,12 @@ open class Coordinate(val x: Int, val y: Int) {
 
     fun manhattanDistanceTo(other: Coordinate): Long {
         return (x - other.x).absoluteValue.toLong() + (y - other.y).absoluteValue
+    }
+
+    override fun distanceTo(other: Coordinate): Float {
+        val sq = (other.x - this.x).let { it.toLong() * it } +
+                (other.y - this.y).let { it.toLong() * it }
+        return sqrt(sq.toFloat())
     }
 
     override fun equals(other: Any?): Boolean {

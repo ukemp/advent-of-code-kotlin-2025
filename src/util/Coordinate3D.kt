@@ -8,7 +8,7 @@ inline fun Coordinate3D(str: String, delimiter: Char = ','): Coordinate3D {
         .let { (x, y, z) -> Coordinate3D(x.toInt(), y.toInt(), z.toInt()) }
 }
 
-class Coordinate3D(val x: Int, val y: Int, val z: Int) {
+class Coordinate3D(val x: Int, val y: Int, val z: Int) : Measurable<Coordinate3D> {
 
     operator fun component1(): Int = x
 
@@ -16,7 +16,7 @@ class Coordinate3D(val x: Int, val y: Int, val z: Int) {
 
     operator fun component3(): Int = z
 
-    fun distanceTo(other: Coordinate3D): Float {
+    override fun distanceTo(other: Coordinate3D): Float {
         val sq = (other.x - this.x).let { it.toLong() * it } +
                 (other.y - this.y).let { it.toLong() * it } +
                 (other.z - this.z).let { it.toLong() * it }

@@ -1,24 +1,21 @@
 package day08
 
-import util.AdjacencyMatrix
-import util.Coordinate3D
-import util.Junction
-import util.readLines
+import util.*
 import kotlin.time.measureTime
 
 class Circuit(vararg boxes: Coordinate3D) {
 
-    val boxes = mutableSetOf(*boxes)
+    private val boxes = mutableSetOf(*boxes)
 
     val size: Int
         get() = boxes.size
 
-    fun add(junction: Junction) {
+    fun add(junction: Junction<Coordinate3D>) {
         boxes.add(junction.c1)
         boxes.add(junction.c2)
     }
 
-    fun matches(junction: Junction): Int {
+    fun matches(junction: Junction<Coordinate3D>): Int {
         var count = 0
         if (boxes.contains(junction.c1)) count++
         if (boxes.contains(junction.c2)) count++

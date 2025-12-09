@@ -1,59 +1,68 @@
 package util
 
-class AdjacencyMatrix(private val coordinates: List<Coordinate3D>) {
+class AdjacencyMatrix<T : Measurable<T>>(private val measurables: List<T>) {
 
     private val distances: Array<FloatArray>
 
     init {
-        val size = coordinates.size
+        val size = measurables.size
         distances = Array(size) { FloatArray(size) }
         for (i in 0 until size) {
             for (j in 0 until size) {
                 if (i == j) {
                     distances[i][j] = 0f
                 } else {
-                    distances[i][j] = coordinates[i].distanceTo(coordinates[j])
+                    distances[i][j] = measurables[i].distanceTo(measurables[j])
                 }
             }
         }
     }
 
-    fun sortedJunctions(): List<Junction> {
-        val size = coordinates.size
-        return buildList {
-            for (i in 0 until size) {
-                for (j in i + 1 until size) {
-                    add(Junction(coordinates[i], coordinates[j], distances[i][j]))
-                }
-            }
-        }.sorted()
+    val size: Int
+        get() = measurables.size
+
+    operator fun get(i: Int, j: Int): Float {
+        return distances[i][j]
     }
 
-    fun getDistance(from: Coordinate3D, to: Coordinate3D): Float? {
-        val fromIndex = coordinates.indexOf(from)
-        val toIndex = coordinates.indexOf(to)
+    fun measurableAt(index: Int): T {
+        return measurables[index]
+    }
+
+    fun distanceBetween(from: T, to: T): Float? {
+        val fromIndex = measurables.indexOf(from)
+        val toIndex = measurables.indexOf(to)
         if (fromIndex == -1 || toIndex == -1) {
             return null
         }
         return distances[fromIndex][toIndex]
     }
+}
 
-    fun getDistance(fromIndex: Int, toIndex: Int): Float {
-        return distances[fromIndex][toIndex]
-    }
+/**
+ * Encapsulates the distance between to measurables.
+ *
+ * @see sortedJunctions
+ */
+data class Junction<T : Measurable<T>>(val c1: T, val c2: T, val distance: Float) : Comparable<Junction<T>> {
 
-    fun size(): Int {
-        return coordinates.size
-    }
-
-    fun getCoordinate(index: Int): Coordinate3D {
-        return coordinates[index]
+    override fun compareTo(other: Junction<T>): Int {
+        return this.distance.compareTo(other.distance)
     }
 }
 
-data class Junction(val c1: Coordinate3D, val c2: Coordinate3D, val distance: Float) : Comparable<Junction> {
-
-    override fun compareTo(other: Junction): Int {
-        return this.distance.compareTo(other.distance)
-    }
+/**
+ * Returns a list of all junctions sorted from the shortest distance to the longest.
+ */
+fun <T : Measurable<T>> AdjacencyMatrix<T>.sortedJunctions(): List<Junction<T>> {
+    // Implemented as an extension function to let Junction have the same T as the AdjacencyMatrix, otherwise Junction
+    // must be an inner class on AdjacencyMatrix.
+    val size = this.size
+    return buildList<Junction<T>> {
+        for (i in 0 until size) {
+            for (j in i + 1 until size) {
+                add(Junction(measurableAt(i), measurableAt(j), this@sortedJunctions[i, j]))
+            }
+        }
+    }.sorted()
 }
