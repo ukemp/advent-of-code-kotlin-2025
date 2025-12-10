@@ -3,7 +3,6 @@ package day09
 import util.AdjacencyMatrix
 import util.Measurable
 import util.readLines
-import util.sortedJunctions
 import kotlin.math.absoluteValue
 import kotlin.time.measureTime
 
