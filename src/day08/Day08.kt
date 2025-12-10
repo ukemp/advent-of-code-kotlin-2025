@@ -1,6 +1,9 @@
 package day08
 
-import util.*
+import util.AdjacencyMatrix
+import util.Coordinate3D
+import util.Junction
+import util.readLines
 import kotlin.time.measureTime
 
 class Circuit(vararg boxes: Coordinate3D) {
@@ -33,29 +36,32 @@ class Circuit(vararg boxes: Coordinate3D) {
 
 fun main() {
     fun part1(input: List<String>, max: Int): Long {
-        val m = AdjacencyMatrix(input.map { Coordinate3D(it) })
-        val junctions = m.sortedJunctions()
-        val circuits = mutableListOf<Circuit>()
+        val junctions = AdjacencyMatrix(input.map { Coordinate3D(it) }).sortedJunctions()
 
-        for (junction in junctions.take(max)) {
-            val matches = circuits.filter { circuit -> circuit.matches(junction) > 0 }
-            check(matches.size < 3)
+        val circuits = junctions
+            .take(max)
+            .fold(emptyList<Circuit>()) { circuits, junction ->
+                val matches = circuits.filter { circuit -> circuit.matches(junction) > 0 }
 
-            if (matches.isEmpty()) {
-                circuits.add(Circuit(junction.c1, junction.c2))
-            } else if (matches.size == 1) {
-                // This check is not really required, it's the "nothing happens" part of the puzzle:
-                if (matches[0].matches(junction) == 1) {
-                    matches[0].add(junction)
+                if (matches.isEmpty()) {
+                    circuits + Circuit(junction.c1, junction.c2)
+                } else if (matches.size == 1) {
+                    // This check is not really required, it's the "nothing happens" part of the puzzle:
+                    if (matches[0].matches(junction) == 1) {
+                        matches[0].add(junction)
+                    }
+                    circuits
+                } else if (matches.size == 2) {
+                    matches[0].join(matches[1])
+                    circuits - matches[1]
+                } else {
+                    throw IllegalStateException()
                 }
-            } else if (matches.size == 2) {
-                matches[0].join(matches[1])
-                check(circuits.remove(matches[1]))
             }
-        }
 
-        val sorted = circuits.sortedWith { p0, p1 -> p1.size.compareTo(p0.size) }
-        return sorted.take(3).fold(1L) { next, junctions -> next * junctions.size }
+        return circuits.sortedWith { c0, c1 -> c1.size.compareTo(c0.size) }
+            .take(3)
+            .fold(1L) { next, junctions -> next * junctions.size }
     }
 
     fun part2(input: List<String>): Long {
